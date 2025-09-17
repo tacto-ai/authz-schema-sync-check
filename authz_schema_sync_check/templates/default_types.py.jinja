@@ -21,8 +21,8 @@ P = TypeVar("P", bound=str)
 class Resource(Generic[P]):
     """Base class for all resources with typed permissions."""
 
-    def __init__(self, id: str, resource_type: str):
-        self.id = id
+    def __init__(self, id: str | int, resource_type: str):
+        self.id = str(id)
         self.type = resource_type
 
 # Resource classes with their specific permission types
@@ -33,6 +33,6 @@ class {{ object_type|to_camel_case }}(Resource[{{ object_type|to_camel_case }}Pe
     # Set the permission type for this resource
     permission_type = {{ object_type|to_camel_case }}Permission
 
-    def __init__(self, id: str):
+    def __init__(self, id: str | int):
         super().__init__(id, "{{ object_type }}")
 {% endfor %}
