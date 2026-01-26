@@ -39,8 +39,8 @@ def test_generate_code_python():
 
     # Check for the new structure
     assert "P = TypeVar" in py_code
-    assert "class Resource(Generic[P])" in py_code
-    assert "def __init__(self, id: str | int, resource_type: str)" in py_code
+    assert "class Resource(Generic[P], ABC)" in py_code
+    assert "def __init__(self, id: str | int)" in py_code
 
     # Check for the simplified class definitions
     assert "class User(Resource[" in py_code
@@ -67,8 +67,6 @@ def test_generate_code_python():
     assert "class TableView" in py_code
     assert "class Table_view" not in py_code  # Make sure it's not using capitalize
     assert 'Literal["view", "edit"]' in py_code
-    # Ensure the resource_type is still snake_case
-    assert 'super().__init__(id, "table_view")' in py_code
 
 
 def test_generate_code_typescript():
@@ -114,8 +112,8 @@ def test_write_code(tmp_path):
 
     # Check for the new structure
     assert "P = TypeVar" in py_content
-    assert "class Resource(Generic[P])" in py_content
-    assert "def __init__(self, id: str | int, resource_type: str)" in py_content
+    assert "class Resource(Generic[P], ABC)" in py_content
+    assert "def __init__(self, id: str | int)" in py_content
 
     # Check for the simplified class definitions
     assert "class User(Resource[" in py_content
@@ -125,8 +123,6 @@ def test_write_code(tmp_path):
     # Check for the camel case conversion of snake_case resource names
     assert "class TableView" in py_content
     assert "class Table_view" not in py_content
-    # Ensure the resource_type is still snake_case
-    assert 'super().__init__(id, "table_view")' in py_content
     # Check for permission_type
     assert "permission_type = UserPermission" in py_content
     assert "permission_type = GroupPermission" in py_content

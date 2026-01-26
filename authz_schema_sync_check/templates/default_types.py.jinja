@@ -3,6 +3,7 @@ GENERATED CODE - DO NOT EDIT MANUALLY
 This file is generated from schema.zed and should not be modified directly.
 """
 
+from abc import ABC, abstractmethod
 from typing import Generic, Literal, TypeVar
 
 # Permission type aliases for each resource type
@@ -18,12 +19,17 @@ from typing import Generic, Literal, TypeVar
 P = TypeVar("P", bound=str)
 
 # Base resource class
-class Resource(Generic[P]):
+class Resource(Generic[P], ABC):
     """Base class for all resources with typed permissions."""
 
-    def __init__(self, id: str | int, resource_type: str):
+    def __init__(self, id: str | int):
         self.id = str(id)
-        self.type = resource_type
+
+    @property
+    @abstractmethod
+    def type(self) -> str:
+        """Return the resource type string."""
+        ...
 
 # Resource classes with their specific permission types
 {% for object_type in object_types %}
@@ -34,5 +40,10 @@ class {{ object_type|to_camel_case }}(Resource[{{ object_type|to_camel_case }}Pe
     permission_type = {{ object_type|to_camel_case }}Permission
 
     def __init__(self, id: str | int):
-        super().__init__(id, "{{ object_type }}")
+        super().__init__(id)
+
+    @property
+    def type(self) -> Literal["{{ object_type }}"]:
+        """Return the resource type string."""
+        return "{{ object_type }}"
 {% endfor %}
